@@ -333,7 +333,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                     maxLength={11}
                     value={formData.tcKimlik}
                     onChange={(e) => handleInputChange('tcKimlik', e.target.value.replace(/\D/g, ''))}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
                       errors.tcKimlik ? 'border-red-500 bg-red-50' : 'border-slate-300'
                     }`}
                     placeholder="12345678901"
@@ -348,7 +348,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                     maxLength={8}
                     value={formData.tcFull}
                     onChange={(e) => handleInputChange('tcFull', e.target.value.toUpperCase())}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
                       errors.tcFull ? 'border-red-500 bg-red-50' : 'border-slate-300'
                     }`}
                     placeholder="A48L2855"
@@ -395,7 +395,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       maxLength={10}
                       value={formData.telefon}
                       onChange={(e) => handleInputChange('telefon', e.target.value.replace(/\D/g, ''))}
-                      className={`flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                      className={`flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
                         errors.telefon ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="5530202873"
@@ -467,7 +467,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       maxLength={2}
                       value={formData.plakaIl}
                       onChange={(e) => handleInputChange('plakaIl', e.target.value.replace(/\D/g, ''))}
-                      className={`w-16 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold ${
+                      className={`w-16 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
                         errors.plakaIl ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="01"
@@ -477,7 +477,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       maxLength={4}
                       value={formData.plakaSeri}
                       onChange={(e) => handleInputChange('plakaSeri', e.target.value.toUpperCase())}
-                      className={`flex-1 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold ${
+                      className={`flex-1 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
                         errors.plakaSeri ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="ABC"
@@ -487,7 +487,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       maxLength={4}
                       value={formData.plakaNo}
                       onChange={(e) => handleInputChange('plakaNo', e.target.value.replace(/\D/g, ''))}
-                      className={`w-20 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold ${
+                      className={`w-20 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
                         errors.plakaNo ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="1234"
