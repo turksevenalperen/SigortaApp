@@ -252,6 +252,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
       if (data.success) {
         setVehicle(data.data);
+        setCurrentStep(4);
         setShowPrices(true);
       }
     } catch (err) {
@@ -263,6 +264,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
   const handleNewQuery = () => {
     setShowPrices(false);
+    setCurrentStep(3);
     setSelectedBrand(null);
     setSelectedModel(null);
     setSelectedYear(null);
@@ -298,14 +300,14 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            {[1, 2, 3].map((step) => (
+            {[1, 2, 3, 4].map((step) => (
               <div key={step} className="flex items-center flex-1">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
                   currentStep >= step ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-300 text-slate-600'
                 }`}>
                   {currentStep > step ? <Check className="w-5 h-5" /> : step}
                 </div>
-                {step < 3 && (
+                {step < 4 && (
                   <div className={`flex-1 h-1 mx-2 transition-all ${
                     currentStep > step ? 'bg-blue-600' : 'bg-slate-300'
                   }`} />
@@ -317,6 +319,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
             <span className={currentStep === 1 ? 'font-semibold text-blue-600' : ''}>Kimlik Bilgileri</span>
             <span className={currentStep === 2 ? 'font-semibold text-blue-600' : ''}>Ruhsat Bilgileri</span>
             <span className={currentStep === 3 ? 'font-semibold text-blue-600' : ''}>Araç Bilgileri</span>
+            <span className={currentStep === 4 ? 'font-semibold text-blue-600' : ''}>Fiyat Sonuçları</span>
           </div>
         </div>
 
@@ -467,7 +470,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       maxLength={2}
                       value={formData.plakaIl}
                       onChange={(e) => handleInputChange('plakaIl', e.target.value.replace(/\D/g, ''))}
-                      className={`w-16 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
+                      className={`w-12 sm:w-16 px-2 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
                         errors.plakaIl ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="01"
@@ -477,15 +480,22 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       maxLength={4}
                       value={formData.plakaSeri}
                       onChange={(e) => handleInputChange('plakaSeri', e.target.value.toUpperCase())}
-                      className={`flex-1 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
+                      className={`flex-1 px-2 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
                         errors.plakaSeri ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
-                      placeholder="ABC"
+                      placeholder="A"
                     />
                     <input
                       type="text"
                       maxLength={4}
                       value={formData.plakaNo}
+                      onChange={(e) => handleInputChange('plakaNo', e.target.value.replace(/\D/g, ''))}
+                      className={`w-16 sm:w-20 px-2 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
+                        errors.plakaNo ? 'border-red-500 bg-red-50' : 'border-slate-300'
+                      }`}
+                      placeholder="1234"
+                    />
+                  </div>
                       onChange={(e) => handleInputChange('plakaNo', e.target.value.replace(/\D/g, ''))}
                       className={`w-20 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
                         errors.plakaNo ? 'border-red-500 bg-red-50' : 'border-slate-300'

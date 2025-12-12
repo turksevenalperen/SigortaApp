@@ -1,4 +1,4 @@
-import { Shield, TrendingUp, TrendingDown, Home } from 'lucide-react';
+import { Shield, TrendingUp, TrendingDown, Home, Check, ArrowLeft } from 'lucide-react';
 
 interface Vehicle {
   id: number;
@@ -38,6 +38,13 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: Pric
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-slate-50 py-8 px-4">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
+          <button
+            onClick={onBackToHome}
+            className="inline-flex items-center text-slate-600 hover:text-slate-900 transition-colors mb-4"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Ana Sayfaya Dön
+          </button>
           <div className="flex items-center justify-center mb-4">
             <Shield className="w-12 h-12 text-green-600" />
           </div>
@@ -45,6 +52,31 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: Pric
           <p className="text-slate-600">
             {vehicle.marka} {vehicle.model} ({vehicle.yil})
           </p>
+        </div>
+
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            {[1, 2, 3, 4].map((step) => (
+              <div key={step} className="flex items-center flex-1">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
+                  step <= 4 ? 'bg-green-600 text-white shadow-lg' : 'bg-slate-300 text-slate-600'
+                }`}>
+                  {step < 4 ? <Check className="w-5 h-5" /> : step}
+                </div>
+                {step < 4 && (
+                  <div className={`flex-1 h-1 mx-2 transition-all ${
+                    step < 4 ? 'bg-green-600' : 'bg-slate-300'
+                  }`} />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-between text-xs text-slate-600 px-2">
+            <span>✓ Kimlik Bilgileri</span>
+            <span>✓ Ruhsat Bilgileri</span>
+            <span>✓ Araç Bilgileri</span>
+            <span className="font-semibold text-green-600">Fiyat Sonuçları</span>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
