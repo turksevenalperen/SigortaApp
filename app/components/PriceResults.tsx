@@ -61,11 +61,11 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: Pric
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
                   step <= 4 ? 'bg-green-600 text-white shadow-lg' : 'bg-slate-300 text-slate-600'
                 }`}>
-                  {step < 4 ? <Check className="w-5 h-5" /> : step}
+                  {(step < 4) ? <Check className="w-5 h-5" /> : step}
                 </div>
-                {step < 4 && (
+                {(step < 4) && (
                   <div className={`flex-1 h-1 mx-2 transition-all ${
-                    step < 4 ? 'bg-green-600' : 'bg-slate-300'
+                    (step < 4) ? 'bg-green-600' : 'bg-slate-300'
                   }`} />
                 )}
               </div>

@@ -496,13 +496,6 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       placeholder="1234"
                     />
                   </div>
-                      onChange={(e) => handleInputChange('plakaNo', e.target.value.replace(/\D/g, ''))}
-                      className={`w-20 px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
-                        errors.plakaNo ? 'border-red-500 bg-red-50' : 'border-slate-300'
-                      }`}
-                      placeholder="1234"
-                    />
-                  </div>
                   {(errors.plakaIl || errors.plakaSeri || errors.plakaNo) && (
                     <p className="text-red-600 text-sm mt-1">⚠️ Plaka bilgileri hatalı</p>
                   )}
