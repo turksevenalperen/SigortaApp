@@ -27,6 +27,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
+    tcKimlik: '',
     tcFull: '',
     ad: '',
     soyad: '',
@@ -71,6 +72,12 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
   const validateStep1 = () => {
     const newErrors: Record<string, string> = {};
+
+    if (!formData.tcKimlik || formData.tcKimlik.length !== 11) {
+      newErrors.tcKimlik = 'TC Kimlik No 11 haneli olmalıdır';
+    } else if (!/^\d{11}$/.test(formData.tcKimlik)) {
+      newErrors.tcKimlik = 'TC Kimlik No sadece rakamlardan oluşmalıdır';
+    }
 
     if (!formData.tcFull || formData.tcFull.length !== 8) {
       newErrors.tcFull = 'TC Seri No 8 karakter olmalıdır (örn: A49L2955)';
@@ -320,7 +327,22 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">TC Seri No *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">TC Kimlik No *</label>
+                  <input
+                    type="text"
+                    maxLength={11}
+                    value={formData.tcKimlik}
+                    onChange={(e) => handleInputChange('tcKimlik', e.target.value.replace(/\D/g, ''))}
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                      errors.tcKimlik ? 'border-red-500 bg-red-50' : 'border-slate-300'
+                    }`}
+                    placeholder="12345678901"
+                  />
+                  {errors.tcKimlik && <p className="text-red-600 text-sm mt-1 flex items-center">⚠️ {errors.tcKimlik}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">TC Seri No (Kimlikte) *</label>
                   <input
                     type="text"
                     maxLength={8}
