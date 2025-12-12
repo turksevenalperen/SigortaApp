@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { ChevronRight, Check, Loader2, ArrowLeft, Shield } from 'lucide-react';
 import PriceResults from '../components/PriceResults';
 
-const API_BASE = 'https://flask-excel-production.up.railway.app/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://flask-excel-production.up.railway.app/api';
 
 interface Vehicle {
   id: number;
