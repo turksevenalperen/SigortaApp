@@ -1,22 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SigortaApp 🚗
 
-## Getting Started
+Modern araç sigorta fiyat karşılaştırma platformu. React (Next.js) frontend ve Flask backend ile geliştirilmiştir.
 
-First, run the development server:
+## 🌟 Özellikler
 
+- ⚡ **Hızlı Karşılaştırma**: 3 adımda tüm sigorta fiyatlarını görün
+- 🏢 **Kapsamlı**: Türkiye'deki tüm sigorta şirketleri
+- 💰 **Tasarruf**: En uygun fiyatı anında bulun
+- 📱 **Responsive**: Mobil ve masaüstü uyumlu
+- 🔒 **Güvenli**: SSL koruması ve veri güvenliği
+
+## 🛠️ Teknolojiler
+
+### Frontend
+- **Next.js 14** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Lucide React** - Icons
+- **React Select** - Dropdown components
+
+### Backend
+- **Flask** - Python web framework
+- **PostgreSQL** - Database
+- **SQLAlchemy** - ORM
+- **Flask-CORS** - Cross-origin support
+- **Pandas** - Data processing
+
+## 🚀 Kurulum
+
+### Frontend
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend
+```bash
+pip install -r requirements.txt
+python app.py
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📖 API Endpoints
+
+- `GET /api/brands` - Marka listesi
+- `GET /api/models/{brand}` - Model listesi
+- `GET /api/years/{brand}/{model}` - Yıl listesi
+- `GET /api/vehicle/{brand}/{model}/{year}` - Araç fiyatları
+
+## 🌐 Demo
+
+Frontend: [Vercel Deployment](https://sigorta-app.vercel.app)
+Backend: [Railway API](https://flask-excel-production.up.railway.app)
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
