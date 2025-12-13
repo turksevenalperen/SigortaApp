@@ -287,7 +287,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
         <div className="text-center mb-8">
           <button
             onClick={onBack}
-            className="inline-flex items-center text-slate-600 hover:text-slate-900 transition-colors mb-4"
+            className="inline-flex items-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all duration-300 mb-4 px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:shadow-sm transform hover:scale-[1.02]"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Ana Sayfaya Dön
@@ -299,27 +299,27 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
         </div>
 
         <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center gap-4 sm:gap-30 mb-4 ml-2 sm:ml-6">
             {[1, 2, 3, 4].map((step) => (
               <div key={step} className="flex items-center flex-1">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold transition-all text-sm sm:text-base ${
                   currentStep >= step ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-300 text-slate-600'
                 }`}>
-                  {currentStep > step ? <Check className="w-5 h-5" /> : step}
+                  {currentStep > step ? <Check className="w-4 h-4 sm:w-5 sm:h-5" /> : step}
                 </div>
                 {step < 4 && (
-                  <div className={`flex-1 h-1 mx-2 transition-all ${
+                  <div className={`flex-1 h-1 -mr-8 sm:-mr-30 transition-all ${
                     currentStep > step ? 'bg-blue-600' : 'bg-slate-300'
                   }`} />
                 )}
               </div>
             ))}
           </div>
-          <div className="flex justify-between text-xs text-slate-600 px-2">
-            <span className={currentStep === 1 ? 'font-semibold text-blue-600' : ''}>Kimlik Bilgileri</span>
-            <span className={currentStep === 2 ? 'font-semibold text-blue-600' : ''}>Ruhsat Bilgileri</span>
-            <span className={currentStep === 3 ? 'font-semibold text-blue-600' : ''}>Araç Bilgileri</span>
-            <span className={currentStep === 4 ? 'font-semibold text-blue-600' : ''}>Fiyat Sonuçları</span>
+          <div className="flex justify-between text-xs sm:text-sm text-slate-600 px-1 sm:px-2 ml-1 sm:ml-2">
+            <span className={`text-center ${currentStep === 1 ? 'font-semibold text-blue-600' : ''}`}>Kimlik Bilgileri</span>
+            <span className={`text-center ${currentStep === 2 ? 'font-semibold text-blue-600' : ''}`}>Ruhsat Bilgileri</span>
+            <span className={`text-center ${currentStep === 3 ? 'font-semibold text-blue-600' : ''}`}>Araç Bilgileri</span>
+            <span className={`text-center ${currentStep === 4 ? 'font-semibold text-blue-600' : ''}`}>Fiyat Sonuçları</span>
           </div>
         </div>
 
@@ -366,7 +366,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       type="text"
                       value={formData.ad}
                       onChange={(e) => handleInputChange('ad', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
                         errors.ad ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="Ahmet"
@@ -380,7 +380,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       type="text"
                       value={formData.soyad}
                       onChange={(e) => handleInputChange('soyad', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
                         errors.soyad ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="Yılmaz"
@@ -391,17 +391,17 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Telefon *</label>
-                  <div className="flex items-center">
-                    <span className="text-slate-600 font-semibold mr-2">+90</span>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <span className="text-slate-600 font-semibold text-sm sm:text-base shrink-0">+90</span>
                     <input
                       type="text"
                       maxLength={10}
                       value={formData.telefon}
                       onChange={(e) => handleInputChange('telefon', e.target.value.replace(/\D/g, ''))}
-                      className={`flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
+                      className={`w-full px-3 sm:px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
                         errors.telefon ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
-                      placeholder="5530202873"
+                      placeholder="5530202878"
                     />
                   </div>
                   {errors.telefon && <p className="text-red-600 text-sm mt-1">⚠️ {errors.telefon}</p>}
@@ -464,13 +464,13 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Plaka *</label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1  sm:gap-2">
                     <input
                       type="text"
                       maxLength={2}
                       value={formData.plakaIl}
                       onChange={(e) => handleInputChange('plakaIl', e.target.value.replace(/\D/g, ''))}
-                      className={`w-12 sm:w-16 px-2 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
+                      className={`w-10 sm:w-32 px-1 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 text-sm sm:text-base ${
                         errors.plakaIl ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="01"
@@ -480,7 +480,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       maxLength={4}
                       value={formData.plakaSeri}
                       onChange={(e) => handleInputChange('plakaSeri', e.target.value.toUpperCase())}
-                      className={`flex-1 px-2 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
+                      className={`w-15 sm:w-37 px-1 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 text-sm sm:text-base ${
                         errors.plakaSeri ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="A"
@@ -490,7 +490,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       maxLength={4}
                       value={formData.plakaNo}
                       onChange={(e) => handleInputChange('plakaNo', e.target.value.replace(/\D/g, ''))}
-                      className={`w-16 sm:w-20 px-2 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 ${
+                      className={`w-17 sm:w-32 px-1 sm:px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center font-semibold text-slate-900 text-sm sm:text-base ${
                         errors.plakaNo ? 'border-red-500 bg-red-50' : 'border-slate-300'
                       }`}
                       placeholder="1234"
