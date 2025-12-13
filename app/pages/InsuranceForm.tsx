@@ -171,9 +171,10 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
         try {
           const res = await fetch(`${API_BASE}/brands`);
           const data = await res.json();
+          console.log('Brands API Response:', data);
           setBrands(data.map((b: string) => ({ value: b, label: b })));
         } catch (err) {
-          console.error(err);
+          console.error('Brands API Error:', err);
         }
       };
       fetchBrands();
@@ -182,10 +183,38 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
   useEffect(() => {
     if (!selectedBrand) {
-      setModels([]);
-      setSelectedModel(null);
       setYears([]);
       setSelectedYear(null);
+      setModels([]);
+      setSelectedModel(null);
+      setVehicle(null);
+      setShowPrices(false);
+      return;
+    }
+
+    const fetchYears = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/years/${encodeURIComponent(selectedBrand.value)}`);
+        const data = await res.json();
+        console.log('Years API Response:', data);
+        setYears(data.map((y: string) => ({ value: y, label: y })));
+        setSelectedYear(null);
+        setModels([]);
+        setSelectedModel(null);
+        setVehicle(null);
+        setShowPrices(false);
+      } catch (err) {
+        console.error('Years API Error:', err);
+      }
+    };
+
+    fetchYears();
+  }, [selectedBrand]);
+
+  useEffect(() => {
+    if (!selectedBrand || !selectedYear) {
+      setModels([]);
+      setSelectedModel(null);
       setVehicle(null);
       setShowPrices(false);
       return;
@@ -193,12 +222,12 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
     const fetchModels = async () => {
       try {
-        const res = await fetch(`${API_BASE}/models/${encodeURIComponent(selectedBrand.value)}`);
+        const res = await fetch(
+          `${API_BASE}/models/${encodeURIComponent(selectedBrand.value)}/${encodeURIComponent(selectedYear.value)}`
+        );
         const data = await res.json();
         setModels(data.map((m: string) => ({ value: m, label: m })));
         setSelectedModel(null);
-        setYears([]);
-        setSelectedYear(null);
         setVehicle(null);
         setShowPrices(false);
       } catch (err) {
@@ -207,37 +236,10 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
     };
 
     fetchModels();
-  }, [selectedBrand]);
-
-  useEffect(() => {
-    if (!selectedBrand || !selectedModel) {
-      setYears([]);
-      setSelectedYear(null);
-      setVehicle(null);
-      setShowPrices(false);
-      return;
-    }
-
-    const fetchYears = async () => {
-      try {
-        const res = await fetch(
-          `${API_BASE}/years/${encodeURIComponent(selectedBrand.value)}/${encodeURIComponent(selectedModel.value)}`
-        );
-        const data = await res.json();
-        setYears(data.map((y: string) => ({ value: y, label: y })));
-        setSelectedYear(null);
-        setVehicle(null);
-        setShowPrices(false);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchYears();
-  }, [selectedBrand, selectedModel]);
+  }, [selectedBrand, selectedYear]);
 
   const handlePriceQuery = async () => {
-    if (!selectedBrand || !selectedModel || !selectedYear) return;
+    if (!selectedBrand || !selectedYear || !selectedModel) return;
 
     setLoading(true);
     setShowPrices(false);
@@ -266,8 +268,8 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
     setShowPrices(false);
     setCurrentStep(3);
     setSelectedBrand(null);
-    setSelectedModel(null);
     setSelectedYear(null);
+    setSelectedModel(null);
     setVehicle(null);
   };
 
@@ -553,24 +555,6 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Model * <span className="text-xs text-slate-500 font-normal">(Yazmaya başlayın)</span>
-                  </label>
-                  <Select
-                    options={models}
-                    value={selectedModel}
-                    onChange={setSelectedModel}
-                    placeholder="Model seçin veya arayın..."
-                    isClearable
-                    isSearchable
-                    isDisabled={!selectedBrand}
-                    styles={customStyles}
-                    noOptionsMessage={() => "Model bulunamadı"}
-                    instanceId="model-select"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
                     Yıl * <span className="text-xs text-slate-500 font-normal">(Yazmaya başlayın)</span>
                   </label>
                   <Select
@@ -580,15 +564,33 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                     placeholder="Yıl seçin veya arayın..."
                     isClearable
                     isSearchable
-                    isDisabled={!selectedModel}
+                    isDisabled={!selectedBrand}
                     styles={customStyles}
                     noOptionsMessage={() => "Yıl bulunamadı"}
                     instanceId="year-select"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Model * <span className="text-xs text-slate-500 font-normal">(Yazmaya başlayın)</span>
+                  </label>
+                  <Select
+                    options={models}
+                    value={selectedModel}
+                    onChange={setSelectedModel}
+                    placeholder="Model seçin veya arayın..."
+                    isClearable
+                    isSearchable
+                    isDisabled={!selectedYear}
+                    styles={customStyles}
+                    noOptionsMessage={() => "Model bulunamadı"}
+                    instanceId="model-select"
+                  />
+                </div>
               </div>
 
-              {selectedBrand && selectedModel && selectedYear && (
+              {selectedBrand && selectedYear && selectedModel && (
                 <button
                   onClick={handlePriceQuery}
                   disabled={loading}
