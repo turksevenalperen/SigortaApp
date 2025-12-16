@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { ChevronRight, Check, Loader2, ArrowLeft, Shield } from 'lucide-react';
 import PriceResults from '../components/PriceResults';
+import PaymentPage from '../components/PaymentPage';
+import OrderSuccess from '../components/OrderSuccess';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://flask-excel-production.up.railway.app/api';
 
@@ -50,6 +52,9 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [showPrices, setShowPrices] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [showOrderSuccess, setShowOrderSuccess] = useState(false);
+  const [selectedPaymentInfo, setSelectedPaymentInfo] = useState<{company: string, price: number} | null>(null);
 
   const customStyles = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -266,12 +271,86 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
 
   const handleNewQuery = () => {
     setShowPrices(false);
+    setShowPayment(false);
+    setShowOrderSuccess(false);
     setCurrentStep(3);
     setSelectedBrand(null);
     setSelectedYear(null);
     setSelectedModel(null);
     setVehicle(null);
+    setSelectedPaymentInfo(null);
   };
+
+  const handleGoToPayment = (company: string, price: number) => {
+    setSelectedPaymentInfo({ company, price });
+    setShowPayment(true);
+    setShowPrices(false);
+  };
+
+  const handleBackFromPayment = () => {
+    setShowPayment(false);
+    setShowPrices(true);
+  };
+
+  const handleOrderComplete = () => {
+    setShowPayment(false);
+    setShowOrderSuccess(true);
+  };
+
+  const handleNewOrder = () => {
+    setShowOrderSuccess(false);
+    setShowPrices(false);
+    setShowPayment(false);
+    setCurrentStep(1);
+    setSelectedBrand(null);
+    setSelectedYear(null);
+    setSelectedModel(null);
+    setVehicle(null);
+    setSelectedPaymentInfo(null);
+    setFormData({
+      tcKimlik: '',
+      tcFull: '',
+      ad: '',
+      soyad: '',
+      telefon: '',
+      ruhsatSeri: '',
+      ruhsatNo: '',
+      plakaIl: '',
+      plakaSeri: '',
+      plakaNo: ''
+    });
+  };
+
+  if (showOrderSuccess && selectedPaymentInfo && vehicle) {
+    return (
+      <OrderSuccess
+        selectedCompany={selectedPaymentInfo.company}
+        selectedPrice={selectedPaymentInfo.price}
+        vehicleInfo={`${vehicle.marka} ${vehicle.model} (${vehicle.yil})`}
+        formData={formData}
+        vehicleDetails={{
+          marka: vehicle.marka,
+          model: vehicle.model,
+          yil: vehicle.yil
+        }}
+        onBackToHome={onBack}
+        onNewOrder={handleNewOrder}
+      />
+    );
+  }
+
+  if (showPayment && selectedPaymentInfo && vehicle) {
+    return (
+      <PaymentPage
+        selectedCompany={selectedPaymentInfo.company}
+        selectedPrice={selectedPaymentInfo.price}
+        vehicleInfo={`${vehicle.marka} ${vehicle.model} (${vehicle.yil})`}
+        onBack={handleBackFromPayment}
+        onBackToHome={onBack}
+        onOrderComplete={handleOrderComplete}
+      />
+    );
+  }
 
   if (showPrices && vehicle) {
     return (
@@ -279,6 +358,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
         vehicle={vehicle}
         onNewQuery={handleNewQuery}
         onBackToHome={onBack}
+        onGoToPayment={handleGoToPayment}
       />
     );
   }

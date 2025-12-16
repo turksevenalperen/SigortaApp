@@ -1,4 +1,5 @@
-import { Shield, TrendingUp, TrendingDown, Home } from 'lucide-react';
+import { Shield, TrendingUp, TrendingDown, Home, ShoppingCart } from 'lucide-react';
+import { useState } from 'react';
 
 interface Vehicle {
   id: number;
@@ -12,9 +13,12 @@ interface PriceResultsProps {
   vehicle: Vehicle;
   onNewQuery: () => void;
   onBackToHome: () => void;
+  onGoToPayment?: (company: string, price: number) => void;
 }
 
-export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: PriceResultsProps) {
+export default function PriceResults({ vehicle, onNewQuery, onBackToHome, onGoToPayment }: PriceResultsProps) {
+  const [selectedInsurance, setSelectedInsurance] = useState<{company: string, price: number} | null>(null);
+  
   const allCompanies = Object.entries(vehicle.sigortalar);
 
   const kaskoEntry = allCompanies.find(([company]) =>
@@ -71,26 +75,78 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: Pric
           </div>
         </div>
 
+        {/* Zorunlu Trafik Sigortası Bilgi Kutusu */}
+        <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-6 mb-8">
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">Zorunlu Trafik Sigortası Kapsamı</h3>
+          <p className="text-blue-800 text-sm mb-4">
+            Zorunlu Trafik Sigortası kapsamındaki Temel Koruma Teminatları tüm sigorta şirketlerinde aynıdır. 
+            Yalnızca Ek Paket Teminatları farklılık gösterebilir.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="font-medium text-blue-900">Kişi Başı Ölüm/Sakatlık:</span>
+                <span className="text-blue-800">2.700.000 TL</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-blue-900">Kaza Başı Ölüm/Sakatlık:</span>
+                <span className="text-blue-800">27.000.000 TL</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-blue-900">Araç Başı Maddi Zarar:</span>
+                <span className="text-blue-800">300.000 TL</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="font-medium text-blue-900">Kaza Başı Maddi Zarar:</span>
+                <span className="text-blue-800">600.000 TL</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium text-blue-900">Yedek Parça:</span>
+                <span className="text-blue-800">Orijinal Parça</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200 mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Tüm Sigorta Fiyatları</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">Sigorta Şirketlerini Karşılaştırın ve Seçin</h2>
 
           <div className="space-y-3">
             {sortedCompanies.map(([company, price], index) => {
               const isLowest = price === minPrice;
               const percentageDiff = ((price - minPrice) / minPrice) * 100;
+              const isSelected = selectedInsurance?.company === company;
 
               return (
                 <div
                   key={company}
-                  className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all hover:shadow-md ${
-                    isLowest
-                      ? 'bg-green-50 border-green-500'
+                  onClick={() => setSelectedInsurance({company, price})}
+                  className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all hover:shadow-md cursor-pointer ${
+                    isSelected
+                      ? 'bg-blue-50 border-blue-500 ring-2 ring-blue-200'
+                      : isLowest
+                      ? 'bg-green-50 border-green-500 hover:border-green-600'
                       : 'bg-slate-50 border-slate-200 hover:border-blue-300'
                   }`}
                 >
                   <div className="flex items-center space-x-4">
+                    <div className="flex items-center">
+                      <input
+                        type="radio"
+                        name="insurance"
+                        checked={isSelected}
+                        onChange={() => setSelectedInsurance({company, price})}
+                        className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      />
+                    </div>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                      isLowest ? 'bg-green-600 text-white' : 'bg-slate-300 text-slate-700'
+                      isSelected 
+                        ? 'bg-blue-600 text-white'
+                        : isLowest 
+                        ? 'bg-green-600 text-white' 
+                        : 'bg-slate-300 text-slate-700'
                     }`}>
                       {index + 1}
                     </div>
@@ -99,7 +155,10 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: Pric
                       {isLowest && (
                         <p className="text-xs text-green-600 font-medium">En Uygun Fiyat</p>
                       )}
-                      {!isLowest && percentageDiff > 0 && (
+                      {isSelected && (
+                        <p className="text-xs text-blue-600 font-medium">Seçildi</p>
+                      )}
+                      {!isLowest && percentageDiff > 0 && !isSelected && (
                         <p className="text-xs text-slate-500">
                           +₺{(price - minPrice).toLocaleString('tr-TR')} ({percentageDiff.toFixed(1)}% daha pahalı)
                         </p>
@@ -107,7 +166,13 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: Pric
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className={`text-2xl font-bold ${isLowest ? 'text-green-600' : 'text-slate-900'}`}>
+                    <p className={`text-2xl font-bold ${
+                      isSelected 
+                        ? 'text-blue-600'
+                        : isLowest 
+                        ? 'text-green-600' 
+                        : 'text-slate-900'
+                    }`}>
                       ₺{price.toLocaleString('tr-TR')}
                     </p>
                   </div>
@@ -115,6 +180,27 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: Pric
               );
             })}
           </div>
+          
+          {selectedInsurance && (
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="font-semibold text-blue-900">Seçilen Sigorta:</p>
+                  <p className="text-blue-800">{selectedInsurance.company}</p>
+                </div>
+                <p className="text-2xl font-bold text-blue-600">
+                  ₺{selectedInsurance.price.toLocaleString('tr-TR')}
+                </p>
+              </div>
+              <button
+                onClick={() => onGoToPayment?.(selectedInsurance.company, selectedInsurance.price)}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all transform hover:scale-[1.02] shadow-lg flex items-center justify-center"
+              >
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Sepete Git
+              </button>
+            </div>
+          )}
         </div>
 
         {kaskoPrice && (
@@ -142,13 +228,13 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome }: Pric
         <div className="flex gap-4">
           <button
             onClick={onNewQuery}
-            className="flex-1 bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all transform hover:scale-[1.02] shadow-lg"
+            className="flex-1 bg-slate-200 text-slate-700 py-4 rounded-lg font-semibold hover:bg-slate-300 transition-all"
           >
             Yeni Sorgulama
           </button>
           <button
             onClick={onBackToHome}
-            className="flex items-center justify-center px-6 py-4 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-all"
+            className="flex items-center justify-center px-6 py-4 bg-slate-600 text-white rounded-lg font-semibold hover:bg-slate-700 transition-all"
           >
             <Home className="w-5 h-5 mr-2" />
             Ana Sayfa
