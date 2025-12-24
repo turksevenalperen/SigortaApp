@@ -7,6 +7,9 @@ interface HomePageProps {
   onStart: () => void;
 }
 
+const API_URL = "https://flask-excel-production.up.railway.app";
+
+
 export default function HomePage({ onStart }: HomePageProps) {
   const [productMenuOpen, setProductMenuOpen] = useState(false);
   const [logoImage, setLogoImage] = useState<string | null>(null);
@@ -30,21 +33,21 @@ export default function HomePage({ onStart }: HomePageProps) {
 
   // Backend'den logo yükle
   useEffect(() => {
-    const loadLogo = () => {
-      fetch('http://localhost:5000/api/logo')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.logo_url) {
-            setLogoImage(`http://localhost:5000${data.logo_url}?t=${Date.now()}`);
-          }
-        })
-        .catch(err => console.error('Logo yüklenemedi:', err));
-    };
+  const loadLogo = () => {
+    fetch(`${API_URL}/api/logo`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.logo_url) {
+          setLogoImage(`${data.logo_url}?t=${Date.now()}`); // API zaten tam cloudinary url döndürüyor!
+        }
+      })
+      .catch(err => console.error('Logo yüklenemedi:', err));
+  };
 
-    loadLogo();
-    const interval = setInterval(loadLogo, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  loadLogo();
+  const interval = setInterval(loadLogo, 5000);
+  return () => clearInterval(interval);
+}, []);
 
   const validateName = (name: string) => {
     if (!name.trim()) {
@@ -147,16 +150,16 @@ export default function HomePage({ onStart }: HomePageProps) {
     const fullPlate = `${plateInputs.city} ${plateInputs.letters} ${plateInputs.numbers}`;
 
     try {
-      const response = await fetch('http://localhost:5000/api/cancel-request', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          plate: fullPlate
-        })
-      });
+      const response = await fetch(`${API_URL}/api/cancel-request`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    ...formData,
+    plate: fullPlate
+  })
+});
 
       const result = await response.json();
       
