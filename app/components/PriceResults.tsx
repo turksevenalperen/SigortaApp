@@ -44,7 +44,7 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome, onGoTo
   const displayMaxPrice = maxPrice < MIN_PRICE_THRESHOLD ? MIN_PRICE_THRESHOLD : maxPrice;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50 py-8 px-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-slate-50 py-8 px-4">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
@@ -57,7 +57,7 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome, onGoTo
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
+          <div className="bg-linear-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between mb-2">
               <p className="text-green-100 text-sm font-medium">En Uygun Fiyat</p>
               <TrendingDown className="w-5 h-5" />
@@ -68,7 +68,7 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome, onGoTo
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
+          <div className="bg-linear-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between mb-2">
               <p className="text-orange-100 text-sm font-medium">En Yüksek Fiyat</p>
               <TrendingUp className="w-5 h-5" />
@@ -248,7 +248,7 @@ export default function PriceResults({ vehicle, onNewQuery, onBackToHome, onGoTo
           </div>
         )}
 
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 text-white mb-6">
+        <div className="bg-linear-to-r from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 text-white mb-6">
           <h3 className="text-xl font-bold mb-3">Tasarruf Potansiyeli</h3>
           <p className="text-blue-100 mb-4">
             En uygun fiyatı seçerek <span className="text-2xl font-bold text-yellow-300">₺{(displayMaxPrice - displayMinPrice).toLocaleString('tr-TR')}</span> tasarruf edebilirsiniz!

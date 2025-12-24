@@ -185,7 +185,7 @@ export default function HomePage({ onStart }: HomePageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-slate-50">
       {/* Navbar */}
       <nav className="bg-white shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4">
@@ -400,14 +400,14 @@ export default function HomePage({ onStart }: HomePageProps) {
             
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
               <div className="grid md:grid-cols-2">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-8 flex items-center justify-center">
+                <div className="bg-linear-to-br from-blue-500 to-blue-700 p-8 flex items-center justify-center">
                   <div className="w-full h-full flex items-center justify-center min-h-[300px]">
                     <img src="/p0g845ypfvsxn2y2.png" alt="Kampanya" className="w-full h-full object-cover rounded-lg" />
                   </div>
                 </div>
 
                 <div className="p-8">
-                  <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-lg inline-block mb-6">
+                  <div className="bg-linear-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-lg inline-block mb-6">
                     <span className="text-3xl font-bold">%30 İNDİRİM</span>
                   </div>
                   

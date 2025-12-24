@@ -2,6 +2,9 @@
 import { CheckCircle, Copy, Building2, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+// Backend base url tanımla:
+const API_URL = "https://flask-excel-production.up.railway.app";
+
 interface OrderSuccessProps {
   selectedCompany: string;
   selectedPrice: number;
@@ -49,7 +52,7 @@ export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleIn
 
   // Backend'den banka hesaplarını çek
   useEffect(() => {
-    fetch('http://localhost:5000/api/bank-accounts')
+    fetch(`${API_URL}/api/bank-accounts`)
       .then(res => res.json())
       .then(data => {
         if (data.success && data.accounts) {
@@ -83,7 +86,7 @@ export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleIn
           fiyat: selectedPrice
         };
 
-        const response = await fetch('http://localhost:5000/api/siparis-kaydet', {
+        const response = await fetch(`${API_URL}/api/siparis-kaydet`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -111,7 +114,6 @@ export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleIn
     setCopiedField(field);
     setTimeout(() => setCopiedField(null), 2000);
   };
-
   return (
     <div className="min-h-screen bg-linear-to-br from-green-50 via-white to-slate-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
