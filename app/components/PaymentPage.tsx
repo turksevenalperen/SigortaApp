@@ -1,6 +1,9 @@
 import { ArrowLeft, CreditCard, Building2, Copy, CheckCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+const API_URL = "https://flask-excel-production.up.railway.app";
+
+
 interface PaymentPageProps {
   selectedCompany: string;
   selectedPrice: number;
@@ -27,16 +30,17 @@ export default function PaymentPage({ selectedCompany, selectedPrice, vehicleInf
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
 
   // Backend'den banka hesaplarını çek
+ 
   useEffect(() => {
-    fetch('http://localhost:5000/api/bank-accounts')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.accounts) {
-          setBankAccounts(data.accounts);
-        }
-      })
-      .catch(err => console.error('Banka hesapları yüklenemedi:', err));
-  }, []);
+  fetch(`${API_URL}/api/bank-accounts`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.accounts) {
+        setBankAccounts(data.accounts);
+      }
+    })
+    .catch(err => console.error('Banka hesapları yüklenemedi:', err));
+}, []);
 
   const copyToClipboard = (text: string, field: string) => {
     navigator.clipboard.writeText(text);

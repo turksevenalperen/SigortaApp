@@ -9,10 +9,10 @@ interface HomePageProps {
 
 const API_URL = "https://flask-excel-production.up.railway.app";
 
-
 export default function HomePage({ onStart }: HomePageProps) {
   const [productMenuOpen, setProductMenuOpen] = useState(false);
   const [logoImage, setLogoImage] = useState<string | null>(null);
+  const [isAppLoaded, setIsAppLoaded] = useState(false);
   const [currentView, setCurrentView] = useState<'home' | 'campaigns' | 'cancel'>('home');
   const [formData, setFormData] = useState({
     name: '',
@@ -33,46 +33,28 @@ export default function HomePage({ onStart }: HomePageProps) {
 
   // Backend'den logo yükle
   useEffect(() => {
-  const loadLogo = () => {
     fetch(`${API_URL}/api/logo`)
       .then(res => res.json())
       .then(data => {
         if (data.success && data.logo_url) {
-          setLogoImage(`${data.logo_url}?t=${Date.now()}`); // API zaten tam cloudinary url döndürüyor!
+          setLogoImage(`${data.logo_url}?t=${Date.now()}`);
         }
       })
-      .catch(err => console.error('Logo yüklenemedi:', err));
-  };
-
-  loadLogo();
-  const interval = setInterval(loadLogo, 5000);
-  return () => clearInterval(interval);
-}, []);
+      .finally(() => setIsAppLoaded(true));
+  }, []);
 
   const validateName = (name: string) => {
-    if (!name.trim()) {
-      return 'Ad soyad gereklidir';
-    }
-    if (/\d/.test(name)) {
-      return 'Ad soyad rakam içeremez';
-    }
+    if (!name.trim()) { return 'Ad soyad gereklidir'; }
+    if (/\d/.test(name)) { return 'Ad soyad rakam içeremez'; }
     return '';
   };
 
   const validatePhone = (phone: string) => {
     const cleaned = phone.replace(/\s/g, '');
-    if (!cleaned) {
-      return 'Telefon numarası gereklidir';
-    }
-    if (!cleaned.startsWith('5')) {
-      return 'Telefon numarası 5 ile başlamalıdır';
-    }
-    if (!/^\d+$/.test(cleaned)) {
-      return 'Telefon numarası sadece rakam içermelidir';
-    }
-    if (cleaned.length !== 10) {
-      return 'Telefon numarası 10 haneli olmalıdır';
-    }
+    if (!cleaned) { return 'Telefon numarası gereklidir'; }
+    if (!cleaned.startsWith('5')) { return 'Telefon numarası 5 ile başlamalıdır'; }
+    if (!/^\d+$/.test(cleaned)) { return 'Telefon numarası sadece rakam içermelidir'; }
+    if (cleaned.length !== 10) { return 'Telefon numarası 10 haneli olmalıdır'; }
     return '';
   };
 
@@ -81,9 +63,7 @@ export default function HomePage({ onStart }: HomePageProps) {
       return 'Tüm plaka alanları doldurulmalıdır';
     }
     const cityNum = parseInt(plateInputs.city);
-    if (cityNum < 1 || cityNum > 81) {
-      return 'Plaka kodu 01-81 arası olmalıdır';
-    }
+    if (cityNum < 1 || cityNum > 81) { return 'Plaka kodu 01-81 arası olmalıdır'; }
     if (!/^[A-Z]+$/.test(plateInputs.letters)) {
       return 'Plaka harfleri sadece büyük harf içermelidir';
     }
@@ -151,18 +131,14 @@ export default function HomePage({ onStart }: HomePageProps) {
 
     try {
       const response = await fetch(`${API_URL}/api/cancel-request`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    ...formData,
-    plate: fullPlate
-  })
-});
-
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          plate: fullPlate
+        })
+      });
       const result = await response.json();
-      
       if (result.success) {
         setFormSubmitted(true);
         setTimeout(() => {
@@ -187,6 +163,17 @@ export default function HomePage({ onStart }: HomePageProps) {
     }
   };
 
+  // -------- YÜKLENİYOR EKRANI ---------
+  if (!isAppLoaded) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center bg-linear-to-br from-blue-50 via-white to-slate-50">
+<div className="animate-spin rounded-full h-16 w-16 border-t-4 border-t-blue-600 border-b-4 border-b-blue-300 mb-5"></div>
+        <div className="text-xl text-blue-800 font-bold">Yükleniyor...</div>
+      </div>
+    );
+  }
+
+  // -------- ANA SAYFA (HEPSİ YAKINDAKİ GİBİ DEVAM) ---------
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-slate-50">
       {/* Navbar */}
@@ -295,7 +282,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-start space-x-4 p-4 rounded-lg bg-green-50">
                   <div className="shrink-0">
                     <TrendingUp className="w-8 h-8 text-green-600" />
@@ -307,7 +293,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-start space-x-4 p-4 rounded-lg bg-orange-50">
                   <div className="shrink-0">
                     <DollarSign className="w-8 h-8 text-orange-600" />
@@ -319,7 +304,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-start space-x-4 p-4 rounded-lg bg-slate-50">
                   <div className="shrink-0">
                     <Shield className="w-8 h-8 text-slate-600" />
@@ -360,7 +344,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                   Yenilenen yapay zekâmızla, onlarca sigorta teklifi arasından ucuzunu, sana uygununu ve kapsamlısını buluyoruz. Net teminatlar ve net fiyatlarla kararın hep net olsun.
                 </p>
               </div>
-
               <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
                 <div className="flex items-center justify-center mb-4">
                   <DollarSign className="w-12 h-12 text-green-600" />
@@ -372,7 +355,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                   Önceliğimiz her zaman sensin. Çalıştığımız tüm şirketlerde bütçeni düşünerek "en iyi fiyat garantisi" sunuyoruz.
                 </p>
               </div>
-
               <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
                 <div className="flex items-center justify-center mb-4">
                   <Headphones className="w-12 h-12 text-orange-600" />
@@ -408,20 +390,16 @@ export default function HomePage({ onStart }: HomePageProps) {
                     <img src="/p0g845ypfvsxn2y2.png" alt="Kampanya" className="w-full h-full object-cover rounded-lg" />
                   </div>
                 </div>
-
                 <div className="p-8">
                   <div className="bg-linear-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-lg inline-block mb-6">
                     <span className="text-3xl font-bold">%30 İNDİRİM</span>
                   </div>
-                  
                   <h2 className="text-3xl font-bold text-slate-900 mb-4">
                     5. Yıla Özel Kampanya
                   </h2>
-                  
                   <p className="text-slate-600 text-lg mb-6">
                     5. yıla özel havale ve EFT ödeme işlemlerinizde <span className="font-bold text-blue-600">%30 indirim</span> fırsatından yararlanın!
                   </p>
-                  
                   <div className="space-y-3 mb-6">
                     <div className="flex items-start space-x-2">
                       <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-1" />
@@ -436,7 +414,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                       <span className="text-slate-600">Kampanya süresi boyunca sınırsız kullanım</span>
                     </div>
                   </div>
-
                   <button
                     onClick={onStart}
                     className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition-all w-full"
@@ -446,7 +423,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                 </div>
               </div>
             </div>
-
             <div className="text-center mt-8">
               <button
                 onClick={() => setCurrentView('home')}
@@ -464,7 +440,6 @@ export default function HomePage({ onStart }: HomePageProps) {
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto">
             <h1 className="text-4xl font-bold text-slate-900 mb-8 text-center">Poliçe İptal İşlemleri</h1>
-            
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
               {!formSubmitted ? (
                 <div className="space-y-6">
@@ -485,7 +460,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                       <p className="text-red-500 text-sm mt-1">{errors.name}</p>
                     )}
                   </div>
-
                   <div>
                     <label className="block text-slate-700 font-medium mb-2">
                       Telefon
@@ -504,7 +478,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                       <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
                     )}
                   </div>
-
                   <div>
                     <label className="block text-slate-700 font-medium mb-2">
                       Araç Plakası
@@ -545,7 +518,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                       <p className="text-red-500 text-sm mt-1">{errors.plate}</p>
                     )}
                   </div>
-
                   <button
                     onClick={handleFormSubmit}
                     className="w-full bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl"
@@ -565,7 +537,6 @@ export default function HomePage({ onStart }: HomePageProps) {
                 </div>
               )}
             </div>
-
             <div className="text-center mt-8">
               <button
                 onClick={() => {
