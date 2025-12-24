@@ -682,7 +682,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                       Fiyatlar Sorgulanıyor...
                     </>
                   ) : (
-                    'Fiyat Sorgula'
+                    'Teklifleri Sorgula'
                   )}
                 </button>
               )}

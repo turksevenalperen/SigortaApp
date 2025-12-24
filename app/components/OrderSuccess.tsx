@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { CheckCircle, Copy, Building2, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -27,19 +27,42 @@ interface OrderSuccessProps {
   onNewOrder: () => void;
 }
 
+interface BankAccount {
+  id: number;
+  bank_name: string;
+  iban: string;
+  account_name: string;
+  branch: string;
+  is_active: boolean;
+  order: number;
+}
+
 export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleInfo, formData, vehicleDetails, onBackToHome, onNewOrder }: OrderSuccessProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [orderNumber, setOrderNumber] = useState<string>('');
   const [showDetails, setShowDetails] = useState(false);
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
 
   useEffect(() => {
     setOrderNumber(`SIG-${Date.now().toString().slice(-8)}`);
   }, []);
 
+  // Backend'den banka hesaplarını çek
+  useEffect(() => {
+    fetch('http://localhost:5000/api/bank-accounts')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.accounts) {
+          setBankAccounts(data.accounts);
+        }
+      })
+      .catch(err => console.error('Banka hesapları yüklenemedi:', err));
+  }, []);
+
   // Sipariş bilgilerini veritabanına kaydet
   useEffect(() => {
     const siparisKaydet = async () => {
-      if (!orderNumber) return; // OrderNumber henüz oluşmadıysa bekle
+      if (!orderNumber) return;
 
       try {
         const siparisData = {
@@ -60,7 +83,7 @@ export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleIn
           fiyat: selectedPrice
         };
 
-        const response = await fetch('https://flask-excel-production.up.railway.app/api/siparis-kaydet', {
+        const response = await fetch('http://localhost:5000/api/siparis-kaydet', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -81,23 +104,8 @@ export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleIn
     };
 
     siparisKaydet();
-  }, [orderNumber, formData, vehicleDetails, selectedCompany, selectedPrice]);
+  }, [orderNumber]);
   
-  const bankAccounts = [
-    {
-      bank: 'Ziraat Bankası',
-      iban: 'TR12 0001 0000 0000 0000 0000 01',
-      accountName: 'Sigorta Aracı A.Ş.',
-      branch: 'Merkez Şubesi'
-    },
-    {
-      bank: 'Yapı Kredi Bankası',
-      iban: 'TR34 0006 7000 0000 0000 0000 02',
-      accountName: 'Sigorta Aracı A.Ş.',
-      branch: 'Merkez Şubesi'
-    }
-  ];
-
   const copyToClipboard = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
     setCopiedField(field);
@@ -248,62 +256,69 @@ export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleIn
         <div className="bg-white rounded-2xl shadow-xl p-6 border border-slate-200 mb-8">
           <h2 className="text-xl font-bold text-slate-900 mb-6">Banka Hesap Bilgileri</h2>
           
-          <div className="space-y-6">
-            {bankAccounts.map((account, index) => (
-              <div key={index} className="border border-slate-200 rounded-lg p-4">
-                <h4 className="font-semibold text-slate-900 mb-3 flex items-center">
-                  <Building2 className="w-5 h-5 mr-2" />
-                  {account.bank}
-                </h4>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600">IBAN:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-slate-900 text-sm">{account.iban}</span>
-                      <button
-                        onClick={() => copyToClipboard(account.iban, `iban-${index}`)}
-                        className="p-1 hover:bg-slate-100 rounded transition-colors"
-                      >
-                        {copiedField === `iban-${index}` ? (
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                        ) : (
-                          <Copy className="w-4 h-4 text-slate-600" />
-                        )}
-                      </button>
+          {bankAccounts.length === 0 ? (
+            <div className="text-center py-8 text-slate-600">
+              <Building2 className="w-12 h-12 mx-auto mb-3 text-slate-400" />
+              <p>Banka hesapları yükleniyor...</p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {bankAccounts.map((account, index) => (
+                <div key={account.id} className="border border-slate-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-slate-900 mb-3 flex items-center">
+                    <Building2 className="w-5 h-5 mr-2" />
+                    {account.bank_name}
+                  </h4>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-600">IBAN:</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-slate-900 text-sm">{account.iban}</span>
+                        <button
+                          onClick={() => copyToClipboard(account.iban, `iban-${index}`)}
+                          className="p-1 hover:bg-slate-100 rounded transition-colors"
+                        >
+                          {copiedField === `iban-${index}` ? (
+                            <CheckCircle className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <Copy className="w-4 h-4 text-slate-600" />
+                          )}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <span className="text-slate-600">Hesap Sahibi:</span>
-                    <span className="font-semibold text-slate-900">{account.accountName}</span>
-                  </div>
-                  
-                  <div className="flex justify-between">
-                    <span className="text-slate-600">Şube:</span>
-                    <span className="text-slate-900">{account.branch}</span>
-                  </div>
+                    
+                    <div className="flex justify-between">
+                      <span className="text-slate-600">Hesap Sahibi:</span>
+                      <span className="font-semibold text-slate-900">{account.account_name}</span>
+                    </div>
+                    
+                    <div className="flex justify-between">
+                      <span className="text-slate-600">Şube:</span>
+                      <span className="text-slate-900">{account.branch}</span>
+                    </div>
 
-                  <div className="flex justify-between">
-                    <span className="text-slate-600">Açıklama:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-blue-600 text-sm">{orderNumber}</span>
-                      <button
-                        onClick={() => copyToClipboard(orderNumber, `order-${index}`)}
-                        className="p-1 hover:bg-slate-100 rounded transition-colors"
-                      >
-                        {copiedField === `order-${index}` ? (
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                        ) : (
-                          <Copy className="w-4 h-4 text-slate-600" />
-                        )}
-                      </button>
+                    <div className="flex justify-between">
+                      <span className="text-slate-600">Açıklama:</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-blue-600 text-sm">{orderNumber}</span>
+                        <button
+                          onClick={() => copyToClipboard(orderNumber, `order-${index}`)}
+                          className="p-1 hover:bg-slate-100 rounded transition-colors"
+                        >
+                          {copiedField === `order-${index}` ? (
+                            <CheckCircle className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <Copy className="w-4 h-4 text-slate-600" />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Additional Information */}
@@ -326,12 +341,7 @@ export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleIn
         </div>
 
         <div className="flex gap-4">
-          <button
-            onClick={onNewOrder}
-            className="flex-1 bg-slate-200 text-slate-700 py-4 rounded-lg font-semibold hover:bg-slate-300 transition-all"
-          >
-            Yeni Sipariş
-          </button>
+         
           <button
             onClick={onBackToHome}
             className="flex-1 bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all transform hover:scale-[1.02] shadow-lg"

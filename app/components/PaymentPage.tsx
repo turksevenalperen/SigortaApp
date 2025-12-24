@@ -1,5 +1,5 @@
 import { ArrowLeft, CreditCard, Building2, Copy, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface PaymentPageProps {
   selectedCompany: string;
@@ -10,24 +10,33 @@ interface PaymentPageProps {
   onOrderComplete?: () => void;
 }
 
+interface BankAccount {
+  id: number;
+  bank_name: string;
+  iban: string;
+  account_name: string;
+  branch: string;
+  is_active: boolean;
+  order: number;
+}
+
 export default function PaymentPage({ selectedCompany, selectedPrice, vehicleInfo, onBack, onBackToHome, onOrderComplete }: PaymentPageProps) {
   const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'card'>('transfer');
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [isAgreed, setIsAgreed] = useState(false);
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
 
-  const bankAccounts = [
-    {
-      bank: 'Ziraat Bankası',
-      iban: 'TR12 0001 0000 0000 0000 0000 01',
-      accountName: 'Sigorta Aracı A.Ş.',
-      branch: 'Merkez Şubesi'
-    },
-    {
-      bank: 'Yapı Kredi Bankası',
-      iban: 'TR34 0006 7000 0000 0000 0000 02',
-      accountName: 'Sigorta Aracı A.Ş.',
-      branch: 'Merkez Şubesi'
-    }
-  ];
+  // Backend'den banka hesaplarını çek
+  useEffect(() => {
+    fetch('http://localhost:5000/api/bank-accounts')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.accounts) {
+          setBankAccounts(data.accounts);
+        }
+      })
+      .catch(err => console.error('Banka hesapları yüklenemedi:', err));
+  }, []);
 
   const copyToClipboard = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
@@ -36,7 +45,7 @@ export default function PaymentPage({ selectedCompany, selectedPrice, vehicleInf
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-slate-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <button
@@ -129,56 +138,85 @@ export default function PaymentPage({ selectedCompany, selectedPrice, vehicleInf
                 </p>
               </div>
 
-              {bankAccounts.map((account, index) => (
-                <div key={index} className="border border-slate-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-slate-900 mb-3 flex items-center">
-                    <Building2 className="w-5 h-5 mr-2" />
-                    {account.bank}
-                  </h4>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600">IBAN:</span>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-slate-900">{account.iban}</span>
-                        <button
-                          onClick={() => copyToClipboard(account.iban, `iban-${index}`)}
-                          className="p-1 hover:bg-slate-100 rounded transition-colors"
-                        >
-                          {copiedField === `iban-${index}` ? (
-                            <CheckCircle className="w-4 h-4 text-green-600" />
-                          ) : (
-                            <Copy className="w-4 h-4 text-slate-600" />
-                          )}
-                        </button>
+              {bankAccounts.length === 0 ? (
+                <div className="text-center py-8 text-slate-600">
+                  <Building2 className="w-12 h-12 mx-auto mb-3 text-slate-400" />
+                  <p>Banka hesapları yükleniyor...</p>
+                </div>
+              ) : (
+                bankAccounts.map((account, index) => (
+                  <div key={account.id} className="border border-slate-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-slate-900 mb-3 flex items-center">
+                      <Building2 className="w-5 h-5 mr-2" />
+                      {account.bank_name}
+                    </h4>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-600">IBAN:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-slate-900">{account.iban}</span>
+                          <button
+                            onClick={() => copyToClipboard(account.iban, `iban-${index}`)}
+                            className="p-1 hover:bg-slate-100 rounded transition-colors"
+                          >
+                            {copiedField === `iban-${index}` ? (
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                            ) : (
+                              <Copy className="w-4 h-4 text-slate-600" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Hesap Sahibi:</span>
+                        <span className="font-semibold text-slate-900">{account.account_name}</span>
+                      </div>
+                      
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Şube:</span>
+                        <span className="text-slate-900">{account.branch}</span>
                       </div>
                     </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Hesap Sahibi:</span>
-                      <span className="font-semibold text-slate-900">{account.accountName}</span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">Şube:</span>
-                      <span className="text-slate-900">{account.branch}</span>
-                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <p className="text-yellow-800 text-sm">
-                  <strong>Önemli:</strong> Havale/EFT açıklama kısmına araç plaka numaranızı yazmayı unutmayın. 
-                  Ödeme onayı için dekont fotoğrafını WhatsApp üzerinden gönderebilirsiniz.
-                </p>
+              {/* Onay Checkbox */}
+              <div className="bg-red-50 border-2 border-red-300 rounded-lg p-5">
+                <div className="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
+                    id="payment-agreement"
+                    checked={isAgreed}
+                    onChange={(e) => setIsAgreed(e.target.checked)}
+                    className="w-5 h-5 mt-0.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                  />
+                  <label htmlFor="payment-agreement" className="text-sm text-red-900 cursor-pointer select-none">
+                    <span className="font-bold block mb-1">⚠️ ÖNEMLİ UYARI</span>
+                    <span className="font-semibold">
+                      &quot;Siparişi Bitir&quot; butonuna basmadan para göndermeyiniz! 
+                      Önce sipariş kaydınızı oluşturmak için butona basın, ardından ödemenizi gerçekleştirin. 
+                      Aksi takdirde sipariş kaydınız oluşmayacaktır.
+                    </span>
+                    <span className="block mt-2 font-semibold">
+                      Okudum ve onaylıyorum.
+                    </span>
+                  </label>
+                </div>
               </div>
 
               <button
                 onClick={onOrderComplete}
-                className="w-full bg-green-600 text-white py-4 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-[1.02] shadow-lg text-lg"
+                disabled={!isAgreed}
+                className={`w-full py-4 rounded-lg font-semibold transition-all text-lg ${
+                  isAgreed
+                    ? 'bg-green-600 text-white hover:bg-green-700 transform hover:scale-[1.02] shadow-lg cursor-pointer'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
-                Siparişi Bitir
+                {isAgreed ? 'Siparişi Bitir' : 'Siparişi Bitir'}
               </button>
             </div>
           )}
