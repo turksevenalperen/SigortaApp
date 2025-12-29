@@ -521,7 +521,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                     maxLength={2}
                     value={formData.ruhsatSeri}
                     onChange={(e) => handleInputChange('ruhsatSeri', e.target.value.toUpperCase())}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
                       errors.ruhsatSeri ? 'border-red-500 bg-red-50' : 'border-slate-300'
                     }`}
                     placeholder="SU"
@@ -536,7 +536,7 @@ export default function InsuranceForm({ onBack }: InsuranceFormProps) {
                     maxLength={6}
                     value={formData.ruhsatNo}
                     onChange={(e) => handleInputChange('ruhsatNo', e.target.value.replace(/\D/g, ''))}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-900 ${
                       errors.ruhsatNo ? 'border-red-500 bg-red-50' : 'border-slate-300'
                     }`}
                     placeholder="689350"

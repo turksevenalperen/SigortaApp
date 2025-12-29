@@ -484,7 +484,7 @@ export default function HomePage({ onStart }: HomePageProps) {
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleNameChange(e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${errors.name ? 'border-red-500' : 'border-slate-300'
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-slate-900 ${errors.name ? 'border-red-500' : 'border-slate-300'
                       }`}
                     placeholder="Adınız ve soyadınız"
                   />
@@ -498,7 +498,7 @@ export default function HomePage({ onStart }: HomePageProps) {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handlePhoneChange(e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${errors.phone ? 'border-red-500' : 'border-slate-300'
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-slate-900 ${errors.phone ? 'border-red-500' : 'border-slate-300'
                       }`}
                     placeholder="5530202851"
                     maxLength={10}
@@ -514,7 +514,7 @@ export default function HomePage({ onStart }: HomePageProps) {
                       type="text"
                       value={plateInputs.city}
                       onChange={(e) => handlePlateCityChange(e.target.value)}
-                      className={`w-14 sm:w-20 px-2 sm:px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-center ${errors.plate ? 'border-red-500' : 'border-slate-300'
+                      className={`w-14 sm:w-20 px-2 sm:px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-center text-slate-900 ${errors.plate ? 'border-red-500' : 'border-slate-300'
                         }`}
                       placeholder="34"
                       maxLength={2}
@@ -523,7 +523,7 @@ export default function HomePage({ onStart }: HomePageProps) {
                       type="text"
                       value={plateInputs.letters}
                       onChange={(e) => handlePlateLettersChange(e.target.value)}
-                      className={`flex-1 min-w-0 px-2 sm:px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-center uppercase ${errors.plate ? 'border-red-500' : 'border-slate-300'
+                      className={`flex-1 min-w-0 px-2 sm:px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-center uppercase text-slate-900 ${errors.plate ? 'border-red-500' : 'border-slate-300'
                         }`}
                       placeholder="AB"
                       maxLength={3}
@@ -532,7 +532,7 @@ export default function HomePage({ onStart }: HomePageProps) {
                       type="text"
                       value={plateInputs.numbers}
                       onChange={(e) => handlePlateNumbersChange(e.target.value)}
-                      className={`w-20 sm:w-28 px-2 sm:px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-center ${errors.plate ? 'border-red-500' : 'border-slate-300'
+                      className={`w-20 sm:w-28 px-2 sm:px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-center text-slate-900 ${errors.plate ? 'border-red-500' : 'border-slate-300'
                         }`}
                       placeholder="12345"
                       maxLength={5}
