@@ -329,11 +329,11 @@ export default function OrderSuccess({ selectedCompany, selectedPrice, vehicleIn
           <ul className="space-y-2 text-blue-800 text-sm">
             <li className="flex items-start">
               <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 shrink-0"></span>
-              Ödemenizi gerçekleştirdikten sonra dekont fotoğrafını WhatsApp&apos;tan gönderebilirsiniz
+              Ödemenizi onaylandıktan sonra poliçeniz E-Devlet platformunun &quot;Araçlarım&quot; kategorisinde görüntüleyebilirsiniz
             </li>
             <li className="flex items-start">
               <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 shrink-0"></span>
-              Ödeme onaylandıktan sonra sigorta poliçeniz e-posta adresinize gönderilecektir
+              Ödeme onaylandıktan sonra sigorta poliçenizin PDF&apos;i cep telefonunuza SMS ile gönderilecektir
             </li>
             <li className="flex items-start">
               <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 shrink-0"></span>
